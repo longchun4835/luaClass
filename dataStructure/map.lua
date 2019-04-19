@@ -1,0 +1,55 @@
+--[[
+    和STL map 不同的是,这并不能指定key 的类型
+]]
+require "luaClass.luaTemplate"
+luaTemplate("map",false)
+:declObject(table):_data()
+:declMethod(void):del(any)
+:declMethod(bool):has(any)
+:declMethod(Ty):get(any,Ty)
+:declMethod(void):set(any,Ty)
+:declMethod(void):insert(any,Ty)
+:declMethod(void):onFun(any,func)
+:declMethod(number):size()
+:declMethod(any):iter()
+function map:map(t)
+    t=t or {}
+    self._data=t 
+end
+
+function map:del(key)
+    self._data[key]=nil
+end
+
+function map:has(key)
+    return  self._data[key]~=nil
+end
+function map:get(key,default)
+    return self._data[key] or default
+end
+function map:insert(key,value)
+    self._data[key]=value
+end
+function map:set(key,value)
+    self._data[key]=value
+end
+---@param alterFunc fun(value:any,value2:any)
+function map:onFun(key,alterFunc)
+    self._data[key]=alterFunc()
+end
+function map:size()
+    local count=0
+    for _,_ in pairs(self._data) do
+        count=count+1
+    end
+    return count
+end
+
+function map:iter()
+    local data=self._data
+    return pairs(data)
+end
+
+
+
+return map
