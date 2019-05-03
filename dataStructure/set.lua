@@ -19,6 +19,12 @@ function set:del(key)
     self._data[key]=nil
 end
 
+function set:merge(set2)
+    for key,_ in set2:iter() do
+        self:insert(key)
+    end
+end
+
 function set:has(key)
     return  self._data[key]~=nil
 end
@@ -30,6 +36,12 @@ end
 function set:iter()
     local data=self._data
     return pairs(data)
+end
+
+function set:for_each(luaf)
+    for k,_ in self:iter() do
+        luaf(k)
+    end
 end
 
 return set

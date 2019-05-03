@@ -11,6 +11,7 @@ luaTemplate("queue",false)
 function queue:queue(queueMax,data)
     queueMax=queueMax or 4
     local data=data or {}
+    local size=#data
     local query={}
     for i=1,queueMax do
         data[i]=data[i] or false
@@ -19,7 +20,7 @@ function queue:queue(queueMax,data)
     query[queueMax]=1
     self._query=query
     self._data=data
-    self._tail=1
+    self._tail=1+size
     self._front=1
 end   
 function queue:push_back(value)    

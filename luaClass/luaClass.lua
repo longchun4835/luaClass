@@ -9,7 +9,6 @@ local setmeta=setmeta
 local LuaClass=classObjectHelper.LuaClass
 local Serilize=require("luaClass.Serilize")
 local split=require("luaClass.classFunctionHelper").split
----@param ns table
 ---@param nsName string
 local function namespace(nsName)
 

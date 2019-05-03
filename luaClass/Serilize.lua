@@ -39,7 +39,8 @@ local getType=function ( value )
 	if t=="table" then
 		--这种做法并不科学,也并不正确但是性能较好
 		--面面俱到总有遗漏,正确约束,更容易实现.
-		if value[1] then return "array" end
+		
+		if value[1]~=nil then return "array" end
 		if not getmetatable(value) then return "unMetaTable" end
 		if value.__isClass then return "class" end
 		return "nil"

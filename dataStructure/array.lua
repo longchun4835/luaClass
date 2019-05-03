@@ -20,6 +20,9 @@ end
 function array:at(index)
     return self._data[index]
 end
+function array:set(index,value)
+    self._data[index]=value
+end
 function array:merge(arr)
     local arrsize=arr._size  or #arr
     local size=self._size
@@ -57,6 +60,7 @@ function array:iter()
 end
 function array:clear()
     self._data={}
+    self._size=0
 end
 function array:reverse()
     local data={}
@@ -69,4 +73,27 @@ function array:reverse()
     end
     return array(self.__ty)(data)
 end
+
+function array:sort(cmpFunction)
+    table.sort(self._data,cmpFunction )
+end
+
+
+function array:zip(arr2)
+    return zip(self._data,arr2._data)
+end
+
+function array:for_each(luaf)
+    for k,v in self:iter() do
+        luaf(k,v)
+    end
+end
+function array:zip_each(arr2,luaf)
+    for index,v1,v2 in self:zip(arr2) do
+        luaf(index,v1,v2)
+    end
+end
+
+
+
 return array

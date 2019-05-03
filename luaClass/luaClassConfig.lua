@@ -7,7 +7,7 @@
 --debug等级
 --debug=1代表取消一切特别的操作
 --debug=2以上代表开启类型检查,函数参数检查
-local LUA_CLASS_DEBUG=2
+local LUA_CLASS_DEBUG=1
 
 --如果有宿主语言,并且企图继承宿主类型,请修改以下函数,但是要兼容lua原生类型
 local setmeta

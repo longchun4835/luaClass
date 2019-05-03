@@ -49,7 +49,15 @@ function map:iter()
     local data=self._data
     return pairs(data)
 end
-
-
+function map:merge(map2)
+    for k,v in map2:iter() do
+        self:insert(k,v)
+    end
+end
+function map:for_each(luaf)
+    for k,v in self:iter() do
+        luaf(k,v)
+    end
+end
 
 return map
