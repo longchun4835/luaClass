@@ -2,11 +2,7 @@ _ENV=namespace "container"
 using_namespace "luaClass"
 
 template("set",false)
-:declObject(table):_data()
-:declMethod(void):del(Ty)
-:declMethod(bool):has(Ty)
-:declMethod(void):insert(Ty)
-:declMethod(any):iter()
+
 function set:set(t)
     local data={}
     if t then

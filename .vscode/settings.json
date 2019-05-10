@@ -1,0 +1,9 @@
+{
+    "Lua.diagnostics.disable": [
+        "lowercase-global",
+        "undefined-env-child"
+    ],
+    "Lua.diagnostics.globals": [
+        "setfenv"
+    ]
+}

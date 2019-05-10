@@ -102,25 +102,3 @@ function graph:DFS(startVertexNum)
     return result
 end
 
---[[测试用例 for test
-local arrData=array(number)({1,2,3,4,5,6,7,8,9,10})
-local gf=graph(number)(arrData)
-
-local v1={1,1,1,}
-local v2={2,3,4,}
-gf:setEdge(v1,v2)
-
-local v1={2,3,4,4}
-local v2={10,9,8,5}
-gf:setEdge(v1,v2)
-
-local v1={5,6}
-local v2={6,7}
-gf:setEdge(v1,v2)
-
-local re=gf:DFS(1)
-
-for _,v in re:iter() do
-    print(v)
-end
---]]

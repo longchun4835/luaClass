@@ -2,12 +2,6 @@ _ENV=namespace "container"
 using_namespace "luaClass"
 
 template("stack",false)
-:declObject(number):_size()
-:declObject(table):_data()
-:declMethod(number):size()
-:declMethod(void):push(Ty)
-:declMethod(Ty):pop()
-:declMethod(bool):empty()
 
 function stack:stack(t)
     t=t or {}
@@ -22,6 +16,9 @@ function stack:push(value)
     local num=self._size+1
     self._size=num
     self._data[num]=value
+end
+function stack:top()
+    return self._data[self._size]
 end
 function stack:pop()
     local num=self._size

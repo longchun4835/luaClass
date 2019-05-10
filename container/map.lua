@@ -5,15 +5,7 @@ _ENV=namespace "container"
 using_namespace "luaClass"
 
 template("map",false)
-:declObject(table):_data()
-:declMethod(void):del(any)
-:declMethod(bool):has(any)
-:declMethod(Ty):get(any,Ty)
-:declMethod(void):set(any,Ty)
-:declMethod(void):insert(any,Ty)
-:declMethod(void):onFun(any,func)
-:declMethod(number):size()
-:declMethod(any):iter()
+
 function map:map(t)
     t=t or {}
     self._data=t 

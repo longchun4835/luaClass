@@ -192,6 +192,7 @@ end
 rawset(_G,"number",{__cname="number",__nsName="_G"})
 rawset(_G,"void",{__cname="nil",__nsName="_G"})
 rawset(_G,"any",{__cname="any",__nsName="_G"})
+---@class bool
 rawset(_G,"bool",{__cname="boolean",__nsName="_G"})
 rawset(_G,"boolean",{__cname="boolean",__nsName="_G"})
 rawset(_G,"func",{__cname="function",__nsName="_G"})

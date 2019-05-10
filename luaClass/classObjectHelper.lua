@@ -9,7 +9,7 @@ require "luaClass.luaClassConfig"
 _ENV=namespace "luaClass"
 
 local unpack=unpack or table.unpack
-
+---@class LuaClass
 LuaClass={}
 LuaClass.__index=LuaClass
 function LuaClass:new(luaClassObject)
@@ -18,6 +18,7 @@ function LuaClass:new(luaClassObject)
     setmetatable(obj,self)
     return obj
 end
+---@return LuaClass
 function LuaClass:extend(luaClassObject)
     local cls=self.object
     local supers=cls.__supers
@@ -61,25 +62,18 @@ function LuaClass:extend(luaClassObject)
     end
     return self
 end
-
+---@return LuaClass
 function LuaClass:interface(interfaceObject)
     return self:extend(interfaceObject)
 end
-
----@param component moduleFunction
+---@return LuaClass
 function LuaClass:load(component,...)
 	local cls=self.object
     component(cls,...)
     return self
 end
 
-function LuaClass:preCreate(...)
-    local cls=self.object
-    classRawSet(cls,"__argvsIn",{...})
-    return self
-end
-
-
+---@class LuaObject
 LuaObject={}
 LuaObject.__new=function (self,ctype,classObject)
     local o={}
@@ -116,7 +110,7 @@ LuaObject.__assign=function (self,instance,key,value)
         classRawSet(instance,key,value)
     end
 end
-
+---@class emptyObject
 emptyObject={}
 emptyObject.__index=function(self)
     return  function ()
@@ -138,7 +132,7 @@ function LuaClass:declObject(ctype)
     emptyFunction(self)
 end
 
-
+---@class LuaMethod
 LuaMethod={}
 LuaMethod.__call=function (self,method,...)
     local params={...}

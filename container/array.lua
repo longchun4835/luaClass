@@ -1,19 +1,8 @@
 
 _ENV=namespace "container"
 using_namespace "luaClass"
-
+using_namespace "algorithm.iterator"
 template("array",false)
-:declObject(number):_size()
-:declObject(table):_data()
-:declMethod(number):size()
-:declMethod(Ty):at(number)
-:declMethod(void):push_back(Ty)
-:declMethod(void):merge(array)
-:declMethod(Ty):pop_back()
-:declMethod(bool):empty()
-:declMethod(void):clear()
-:declMethod(any):reverse()
-:declMethod(any,any,any):iter()
 
 function array:array(t)
     t=t or {}

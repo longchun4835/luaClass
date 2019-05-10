@@ -2,14 +2,7 @@ _ENV=namespace "container"
 using_namespace "luaClass"
 
 template("queue",false)
-:declObject(number):_tail()
-:declObject(number):_front()
-:declObject(table):_data()
-:declMethod(number):size()
-:declMethod(void):push_back(Ty)
-:declMethod(Ty):pop_front()
-:declMethod(bool):empty()
-:declMethod(any,any,any):iter()
+
 function queue:queue(queueMax,data)
     queueMax=queueMax or 4
     local data=data or {}
@@ -37,16 +30,14 @@ function queue:pop_front()
     self._front=self._query[front]
     return elem
 end
+function queue:front()
+    return self._data[self._front]
+end
 function queue:empty()
     return self._front==self._tail and (self._data[self._tail]==false)
 end
 function queue:full()
     return (self._front==self._tail) and (self._data[self._tail]~=false)
 end
-function queue:iter()
-    local data=self._data
-    return ipairs(data)
-end
-
 
 return queue

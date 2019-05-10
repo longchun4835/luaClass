@@ -19,8 +19,7 @@ function template(className,debug,ns)
     else
         cls.__debug=(LUA_CLASS_DEBUG>=2)
     end
-    --这样写会有问题
-    --cls.__debug=debug~=nil and debug or 
+
     initSerilize(cls)
     cls.__isClass=true
     cls.__supers={}
@@ -30,7 +29,7 @@ function template(className,debug,ns)
         cls.__declTable={}
         cls.__methodTable={}
     end
-    cls.__lookUp={__nsName=cls.__cname}
+    cls.__lookUp={__nsName=ns.__nsName}
     cls[className] = function() end
 
     local metaTable={}

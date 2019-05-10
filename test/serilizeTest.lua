@@ -1,24 +1,19 @@
-require "container.init"
+require "test.normalTest.Role"
+
 _ENV=namespace "test"
-using_namespace "luaClass"
-using_namespace "container"
-class("Role")
-:declObject(number):num()
 
-local Role=test.Role
+using_namespace "battle"
 
-function Role:Role()
-    self.num=123
-end
+local role=Role("xixixi")
+role.attack=998
+role.defence=888
+role.hp=666
+role.equipments:push_back(Equipment("xixixi",1,2))
+role.equipments:push_back(Equipment("hahah",1,2))
+role.equipments:push_back(Equipment("yinyinyin",1,2))
 
-local arr=array(Role)()
-arr:push_back(Role())
-arr:push_back("other")
-
-
-
-local file=io.open("test/__serilizeResult.lua",'w')
+local file=io.open('test./__serilizeResult.lua','w')
 file:write("return \n")
-file:write(arr:serilize())
-
+file:write(role:serilize())
 file:close()
+

@@ -186,13 +186,13 @@ __serilizeAux=function (object)
 		end
 	end
 end
----@type fun(object:luaObject):string
+
 function serilize(object)
 	local str=serilizeTable[getType(object)](object)
 	reset()
 	return str
 end
----@type fun(str:string):luaObject
+
 function unSerilize(str)
     local g=load(str)
 	local t=g()
@@ -204,7 +204,6 @@ end
 
 
 function initSerilize(luaClassObject)
-   -- registerClass(luaClassObject)
 	classRawSet(luaClassObject,"serilize",serilize)
 	classRawSet(luaClassObject,"unSerilize",unSerilize)
 end
