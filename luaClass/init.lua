@@ -1,2 +1,3 @@
-require "luaClass.luaClass"
-require "luaClass.luaTemplate"
+require "luaClass.namespace"
+include "luaClass.luaClass"
+include "luaClaSS.luaTemplate"

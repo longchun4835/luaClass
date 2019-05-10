@@ -5,12 +5,13 @@
     如果觉得我的作品不错,可以去github给我的项目打星星.
 ]]
 
-require "luaClass.luaClass"
-local LuaClass=require("luaClass.classObjectHelper").LuaClass
-rawset(_G,"Ty",{__cname="Ty"})
+include "luaClass.luaClass"
+_ENV=namespace "luaClass"
 
-local function luaTemplate(className,debug,ns,nsName)
-    ns=ns or _G
+rawset(_G,"Ty",{__cname="Ty"})
+function template(className,debug,ns)
+    ns=ns or __getdeclFenv()
+    local nsName=ns.__nsName
     local cls = {__cname = className}
     rawset(ns,className,cls)
     if debug~=nil then
@@ -20,7 +21,7 @@ local function luaTemplate(className,debug,ns,nsName)
     end
     --这样写会有问题
     --cls.__debug=debug~=nil and debug or 
-    require("luaClass.Serilize")(cls)
+    initSerilize(cls)
     cls.__isClass=true
     cls.__supers={}
     cls.__argvsIn={}
@@ -29,7 +30,7 @@ local function luaTemplate(className,debug,ns,nsName)
         cls.__declTable={}
         cls.__methodTable={}
     end
-    cls.__lookUp={}
+    cls.__lookUp={__nsName=cls.__cname}
     cls[className] = function() end
 
     local metaTable={}
@@ -41,7 +42,7 @@ local function luaTemplate(className,debug,ns,nsName)
             return self.__lookUp[ctype.__cname]
         end
         local t=self.__cname.."("..ctype.__nsName.."."..ctype.__cname..")"
-        luaClass(t,cls.__debug,cls.__lookUp,cls.__nsName)
+        class(t,cls.__debug,cls.__lookUp)
         :extend(cls)
         local tCls=cls.__lookUp[t]
         classRawSet(tCls,"__ty",ctype)
@@ -126,7 +127,3 @@ local function luaTemplate(className,debug,ns,nsName)
     return LuaClass:new(cls)
     
 end
-
-rawset(_G,"luaTemplate",luaTemplate)
-
-return luaTemplate

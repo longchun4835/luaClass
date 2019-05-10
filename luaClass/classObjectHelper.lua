@@ -6,10 +6,11 @@
 ]]
 
 require "luaClass.luaClassConfig"
-require "luaClass.bind"
+_ENV=namespace "luaClass"
+
 local unpack=unpack or table.unpack
 
-local LuaClass={}
+LuaClass={}
 LuaClass.__index=LuaClass
 function LuaClass:new(luaClassObject)
     local obj={}
@@ -28,8 +29,15 @@ function LuaClass:extend(luaClassObject)
     end
     if not classRawGet(cls,"super") then
         classRawSet(cls,"super",luaClassObject)
+        classRawSet(cls,"__super",function(self,...)
+            local instance=self.super:create(...)
+            tolua.setpeer(instance,self)
+            classRawSet(cls,"__currentInstance",instance)
+            return instance
+        end)
     end
     
+
 
     --继承declTable
     if luaClassObject.__declTable and cls.__debug then
@@ -72,7 +80,7 @@ function LuaClass:preCreate(...)
 end
 
 
-local LuaObject={}
+LuaObject={}
 LuaObject.__new=function (self,ctype,classObject)
     local o={}
     o.__classObject=classObject
@@ -109,7 +117,7 @@ LuaObject.__assign=function (self,instance,key,value)
     end
 end
 
-local emptyObject={}
+emptyObject={}
 emptyObject.__index=function(self)
     return  function ()
        return self.luaClassObject
@@ -131,7 +139,7 @@ function LuaClass:declObject(ctype)
 end
 
 
-local LuaMethod={}
+LuaMethod={}
 LuaMethod.__call=function (self,method,...)
     local params={...}
     local types=self.__types
@@ -211,9 +219,3 @@ function LuaClass:declMethod(...)
     emptyFunction(self)
 end
 
-
-return {
-    LuaClass=LuaClass,
-    LuaObject=LuaObject,
-    LuaMethod=LuaMethod,
-}

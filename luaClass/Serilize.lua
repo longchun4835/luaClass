@@ -7,14 +7,15 @@
 	针对我自己的编码规则进行特定的序列化和反序列化方式
 	默认屏蔽一切双下划线开头的字段
 	这部分内容与luaClass没有太多耦合,
-	如果想分离出来,需要将require 部分删掉
+	如果想分离出来,需要将include 部分删掉,_ENV删掉，initSerilize不使用
 ]]
 --这些key并不参与序列化
 local disableKey={
 	["class"]=true,--实际上我并没有这个字段
 	["super"]=true,
 }
-require "luaClass.luaClassConfig"
+include "luaClass.luaClassConfig"
+_ENV=namespace "luaClass"
 
 local serilizeTable={}
 local serilizeClassTable={}
@@ -186,34 +187,25 @@ __serilizeAux=function (object)
 	end
 end
 ---@type fun(object:luaObject):string
-local serilize=function (object)
+function serilize(object)
 	local str=serilizeTable[getType(object)](object)
 	reset()
 	return str
 end
-rawset(_G,"serilize",serilize)
 ---@type fun(str:string):luaObject
-local unSerilize=function (str)
+function unSerilize(str)
     local g=load(str)
 	local t=g()
 	__serilizeAux(t)
 	reset()
 	return t
 end
-rawset(_G,"unSerilize",unSerilize)
----这里弃用
----@type fun(classObject:luaObject):void
-local registerClass=function (classObject)
-	serilizeClassTable[classObject.__cname]=classObject
-end
 
 
-local function Serilize(luaClassObject)
+
+function initSerilize(luaClassObject)
    -- registerClass(luaClassObject)
 	classRawSet(luaClassObject,"serilize",serilize)
 	classRawSet(luaClassObject,"unSerilize",unSerilize)
 end
 
-
-
-return Serilize

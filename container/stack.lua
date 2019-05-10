@@ -1,12 +1,14 @@
-require "luaClass.luaTemplate"
-luaTemplate("stack",false)
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("stack",false)
 :declObject(number):_size()
 :declObject(table):_data()
 :declMethod(number):size()
 :declMethod(void):push(Ty)
 :declMethod(Ty):pop()
 :declMethod(bool):empty()
-:declMethod(any,any,any):iter()
+
 function stack:stack(t)
     t=t or {}
     self._data=t
@@ -31,10 +33,6 @@ function stack:pop()
 end
 function stack:empty()
     return self._size==0
-end
-function stack:iter()
-    local data=self._data
-    return ipairs(data)
 end
 
 return stack

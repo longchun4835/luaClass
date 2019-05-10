@@ -1,7 +1,11 @@
-require "dataStructure.array"
-require "dataStructure.set"
-require "dataStructure.queue"
-luaTemplate("graph",false)
+include "container.array"
+include "container.set"
+include "container.queue"
+
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("graph",false)
 
 --此数据结构要求给出顶点数组或者表
 function graph:graph(data)
@@ -120,6 +124,3 @@ for _,v in re:iter() do
     print(v)
 end
 --]]
-
-
-return graph

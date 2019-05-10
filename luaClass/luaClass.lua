@@ -4,41 +4,13 @@
     Github: https://github.com/CppCXY
 	如果觉得我的作品不错,可以去github给我的项目打星星.
 ]]
-local classObjectHelper=require("luaClass.classObjectHelper")
-local setmeta=setmeta
-local LuaClass=classObjectHelper.LuaClass
-local Serilize=require("luaClass.Serilize")
-local split=require("luaClass.classFunctionHelper").split
----@param nsName string
-local function namespace(nsName)
+include "luaClass.luaClassConfig"
+include "luaClass.classObjectHelper"
+include "luaClass.Serilize"
 
-    local names=split(nsName,".")
-    local index=1
-    local lastNs=_G
-    while(names[index]~=nil) do
-        local name=names[index]
-        if rawget(lastNs,name)==nil then
-            local ns={}
-            rawset(lastNs,name,ns)
-            lastNs=ns
-        else
-            lastNs=rawget(lastNs,name)
-        end
-        index=index+1
-    end
+_ENV=namespace "luaClass"
 
-    return {
-        class=function (self,className,debug)
-            return luaClass(className,debug,lastNs,nsName)
-        end,
-        template=function (self,className,debug)
-            return luaTemplate(className,debug,lastNs,nsName)
-        end
-    }
-end
-rawset(_G,"namespace",namespace)
-
-local function is(self,luaClassObject)
+function is(self,luaClassObject)
     local tname=luaClassObject.__cname
     local _type=type(self)
     if tname=="any" then return true end
@@ -49,13 +21,49 @@ local function is(self,luaClassObject)
     if _type=="userdata" then return true end   
     return false
 end
-rawset(_G,"is",is)
+
+function inheritInstance(self,luaClassInstance)
+    local metatable=getmetatable(self)
+    if metatable then
+        local __index=metatable.__index
+        if __index then
+            if type(__index)=="table" then
+                metatable.__index=function (self,key)
+                    local result=__index[key] 
+                    if result then return result end
+                    return luaClassInstance[key]
+                end
+            elseif type(__index)=="function" then
+                metatable.__index=function(self,key)
+                    local result=__index(self,key) 
+                    if result then return result end
+                    return luaClassInstance[key]
+                end
+            else
+                error("error: wrong code __index must be table or function")
+            end
+        else
+            metatable.__index=luaClassInstance
+        end
+    else
+        setmetatable(self,{__index=luaClassInstance})
+    end
+end
+
+function __getdeclFenv()
+    if _VERSION == "Lua 5.1" then
+        return getfenv(3)
+    else
+        return _G.__currentENV
+    end
+end
 ---@param className string@类型名称
 ---@param debug bool @是否参与debug,默认值是LUA_CLASS_DEBUG
 ---@param ns table @命名空间,默认为_G
 ---@return LuaClass
-local function luaClass(className,debug,ns,nsName)
-    ns=ns or _G
+function class(className,debug,ns)
+    ns=ns or __getdeclFenv()
+    local nsName=ns.__nsName
     local cls = {__cname = className}
     rawset(ns,className,cls)
     if debug~=nil then
@@ -63,9 +71,8 @@ local function luaClass(className,debug,ns,nsName)
     else
         cls.__debug=(LUA_CLASS_DEBUG>=2)
     end
-    --这样写会有问题
-    --cls.__debug=debug~=nil and debug or 
-    Serilize(cls)
+
+    initSerilize(cls)
     cls.__isClass=true
     cls.__supers={}
     cls.__argvsIn={}
@@ -75,16 +82,24 @@ local function luaClass(className,debug,ns,nsName)
         cls.__methodTable={}
     end
     cls[className] = function() end
+    --参见is函数
     cls.is=is
-    
+    --允许继承一个实例，参考inheritInstance函数
+    cls.inheritInstance=inheritInstance
     --lua风格对象创建
     cls.new = function(self,...)
-        local instance= createFromSuper(cls,...) 
+        local instance={}
         instance.__class = cls
         --针对序列化规则,双下划线不参与序列化,所以此处用单下划线
-        instance._defineTable={}
+        if self.__debug then
+            instance._defineTable={}
+        end
         setmeta(instance, cls)
         instance[className](instance , ...)
+        if cls.__currentInstance then
+            instance=cls.__currentInstance
+            cls.__currentInstance=nil
+        end
         return instance
     end
     --兼容cocos 类型创建
@@ -94,7 +109,6 @@ local function luaClass(className,debug,ns,nsName)
 
     local metaTable={}
     --C++, C# XLUA风格创建体系
-    --不直接用new是因为兼容cocos基类
     metaTable.__call=cls.create
     if cls.__debug then
         cls.__newindex=function (self,key,value)
@@ -166,20 +180,13 @@ local function luaClass(className,debug,ns,nsName)
     return LuaClass:new(cls)
 end
 
-rawset(_G,"luaClass",luaClass)
-
-
-local function luaInterface(interfaceName)
+function luaInterface(interfaceName)
     return luaClass(interfaceName)
 end
 
-rawset(_G,"luaInterface",luaInterface)
-
-local function luaComponent(componentName,componentFunction)
+function luaComponent(componentName,componentFunction)
     rawset(_G,componentName,componentFunction)
 end
-
-rawset(_G,"luaComponent",luaComponent)
 
 --这些是标识符不可用作类型创建
 rawset(_G,"number",{__cname="number",__nsName="_G"})
@@ -194,9 +201,4 @@ table.__cname="table"
 table.__nsName="_G"
 io.__cname="io"
 io.__nsName="_G"
---只是保持有一个返回值的风格,实际上通常并不需要利用返回值
-return {
-    luaClass=luaClass,
-    luaInterface=luaInterface,
-    luaComponent=luaComponent,
-}
+

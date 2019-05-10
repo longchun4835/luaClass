@@ -1,4 +1,7 @@
-luaTemplate("mat")
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("mat")
 
 function mat:mat(rowNum,colNum)
     local data={}

@@ -1,7 +1,0 @@
-require "dataStructure.array"
-require "dataStructure.stack"
-require "dataStructure.queue"
-require "dataStructure.set"
-require "dataStructure.map"
-require "dataStructure.mat"
-require "dataStructure.graph"

@@ -1,5 +1,7 @@
-require "luaClass.luaTemplate"
-luaTemplate("set",false)
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("set",false)
 :declObject(table):_data()
 :declMethod(void):del(Ty)
 :declMethod(bool):has(Ty)

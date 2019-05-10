@@ -1,12 +1,12 @@
-require "luaClass.init"
-require "dataStructure.init"
+require "container.init"
 
-namespace("test")
-:class("play")
+_ENV=namespace "test"
+using_namespace "luaClass"
+
+class("play")
 :declObject(number):_playerID()
 :declMethod(number):getPlayerID()
 
-local play=test.play
 function play:play(id)
     self._playerID=id
 end

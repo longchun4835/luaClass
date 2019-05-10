@@ -1,5 +1,7 @@
-require "luaClass.luaTemplate"
-luaTemplate("queue",false)
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("queue",false)
 :declObject(number):_tail()
 :declObject(number):_front()
 :declObject(table):_data()

@@ -1,5 +1,8 @@
-require "luaClass.luaTemplate"
-luaTemplate("array",false)
+
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("array",false)
 :declObject(number):_size()
 :declObject(table):_data()
 :declMethod(number):size()
@@ -93,7 +96,6 @@ function array:zip_each(arr2,luaf)
         luaf(index,v1,v2)
     end
 end
-
 
 
 return array

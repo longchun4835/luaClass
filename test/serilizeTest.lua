@@ -1,8 +1,8 @@
-require "luaClass.init"
-require "dataStructure.init"
-
-namespace("test")
-:class("Role")
+require "container.init"
+_ENV=namespace "test"
+using_namespace "luaClass"
+using_namespace "container"
+class("Role")
 :declObject(number):num()
 
 local Role=test.Role

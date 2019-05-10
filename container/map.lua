@@ -1,8 +1,10 @@
 --[[
     和STL map 不同的是,这并不能指定key 的类型
 ]]
-require "luaClass.luaTemplate"
-luaTemplate("map",false)
+_ENV=namespace "container"
+using_namespace "luaClass"
+
+template("map",false)
 :declObject(table):_data()
 :declMethod(void):del(any)
 :declMethod(bool):has(any)
