@@ -30,7 +30,7 @@ local function namespace(nsName)
         local old=_G
         meta={_G=old,__usingtable={}}
         meta.__index=function (self,key )
-            for _,using_table in old.ipairs(meta.__usingtable) do
+            for _,using_table in old.pairs(meta.__usingtable) do
                 --防止无限递归访问
                 local res=rawget(using_table,key)
                 if res then return res end
@@ -74,7 +74,7 @@ using_namespace=function(nsTable,nsName)
     end
     local meta=getmetatable(nsTable)
     local using_table=meta.__usingtable
-    using_table[#using_table+1]=__lastNs
+    using_table[nsName]=__lastNs
 end
 
 
