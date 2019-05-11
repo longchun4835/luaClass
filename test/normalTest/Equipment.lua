@@ -4,6 +4,7 @@ require "test.normalTest.Item"
 
 _ENV=namespace "battle"
 
+xixixi=998
 using_namespace "luaClass"
 
 class("Equipment")

@@ -65,7 +65,7 @@ function class(className,debug,ns)
     ns=ns or __getdeclFenv()
     local nsName=ns.__nsName
     local cls = {__cname = className}
-    rawset(ns,className,cls)
+    ns[className]=cls
     if debug~=nil then
         cls.__debug=debug
     else

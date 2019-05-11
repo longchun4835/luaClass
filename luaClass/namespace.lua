@@ -25,34 +25,39 @@ local function namespace(nsName)
         end
         index=index+1
     end
-    local meta=getmetatable(lastNs) 
-    if meta==nil then
-        local old=_G
-        meta={_G=old,__usingtable={}}
-        meta.__index=function (self,key )
-            for _,using_table in old.pairs(meta.__usingtable) do
-                --防止无限递归访问
-                local res=rawget(using_table,key)
-                if res then return res end
-            end
-            return rawget(meta._G,key)
+    local newNs={}
+    local old=_G
+    local meta={__ns=lastNs,_G=old,__usingtable={}}
+    meta.__index=function (self,key )
+        --优先保证本地命名空间变量先获取
+        local res=rawget(meta.__ns,key)
+        if res then return res end
+        --然后保证using过的命名空间获取
+        for _,using_table in old.pairs(meta.__usingtable) do
+            --防止无限递归访问
+            local res=rawget(using_table,key)
+            if res then return res end
         end
-        old.setmetatable(lastNs,meta)
-        lastNs.using_namespace=function (nsName)
-            using_namespace(lastNs,nsName)
-        end
+        --然后再查找全局变量
+        return rawget(meta._G,key)
+    end
+    meta.__newindex=function(self,k,v)
+        rawset(meta.__ns,k,v)
+    end
+    old.setmetatable(newNs,meta)
+    newNs.using_namespace=function (nsName)
+        using_namespace(newNs,nsName)
+    end
+    if lastNs.__nsName==nil then
         --主要用于序列化
         lastNs.__nsName=nsName
     end
     if _VERSION =="Lua 5.1" then
-        setfenv(2,lastNs)
+        setfenv(2,newNs)
     else
-        _G.__currentENV=lastNs
+        _G.__currentENV=newNs
     end
-    return lastNs
-end
-if _VERSION =="Lua 5.1" then
-    rawset(_G,"_ENV",{})
+    return  newNs
 end
 
 rawset(_G,"namespace",namespace)
